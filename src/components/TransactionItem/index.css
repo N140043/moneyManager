@@ -1,0 +1,29 @@
+.transaction-item-container {
+  height: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 2px;
+  border: 1px solid #59626d;
+}
+.money-manager-para {
+  font-size: 14px;
+  margin-top: 7px;
+  font-weight: 400;
+  padding-left: 10px;
+  width: 25%;
+}
+.delete-img {
+  height: 20px;
+  cursor: pointer;
+}
+.delete-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25%;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
