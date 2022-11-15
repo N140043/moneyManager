@@ -19,7 +19,7 @@ const MoneyDetails = props => {
       <div className="money-details-box money-details-box2">
         <img
           src="https://assets.ccbp.in/frontend/react-js/money-manager/income-image.png"
-          alt="balance"
+          alt="income"
           className="money-details-image"
         />
         <div className="money-details-info-box">
@@ -30,7 +30,7 @@ const MoneyDetails = props => {
       <div className="money-details-box money-details-box3">
         <img
           src="https://assets.ccbp.in/frontend/react-js/money-manager/expenses-image.png"
-          alt="balance"
+          alt="expenses"
           className="money-details-image"
         />
         <div className="money-details-info-box">
@@ -43,3 +43,7 @@ const MoneyDetails = props => {
 }
 
 export default MoneyDetails
+
+// testid="expensesAmount"
+// testid="incomeAmount"
+// testid="balanceAmount"

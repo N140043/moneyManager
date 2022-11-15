@@ -7,7 +7,7 @@ const TransactionItem = props => {
   } = props
 
   const deleteTransactionHistory = () => {
-    deleteTransaction(id)
+    deleteTransaction(id, type, amount)
   }
 
   return (

@@ -15,30 +15,20 @@ const transactionTypeOptions = [
   },
 ]
 
-const initialTransactions = [
-  {id: uuidv4(), title: 'Salary', amount: 10000, type: 'Income'},
-  {id: uuidv4(), title: 'Car Loan', amount: 590, type: 'Expenses'},
-  {id: uuidv4(), title: 'Part time', amount: 15000, type: 'Income'},
-  {id: uuidv4(), title: 'Phone', amount: 7000, type: 'Expenses'},
-]
+// const initialTransactions = [
+//   {id: uuidv4(), title: 'Salary', amount: 10000, type: 'Income'},
+//   {id: uuidv4(), title: 'Car Loan', amount: 590, type: 'Expenses'},
+//   {id: uuidv4(), title: 'Part time', amount: 15000, type: 'Income'},
+//   {id: uuidv4(), title: 'Phone', amount: 7000, type: 'Expenses'},
+// ]
 class MoneyManager extends Component {
   state = {
-    moneyHistoryList: initialTransactions,
+    moneyHistoryList: [],
     title: '',
     amount: '',
-    type: transactionTypeOptions[0].displayText,
-    income: initialTransactions.map(each => {
-      if (each.type === 'Income') {
-        return each.amount
-      }
-      return 0
-    }),
-    expense: initialTransactions.map(each => {
-      if (each.type === 'Expenses') {
-        return each.amount
-      }
-      return 0
-    }),
+    type: 'Income',
+    income: 0,
+    expense: 0,
   }
 
   addMoneyHistory = event => {
@@ -50,17 +40,17 @@ class MoneyManager extends Component {
       amount,
       type,
     }
-    const incomeAmount = type === 'Income' ? amount : 0
-    const expenseAmount = type !== 'Income' ? amount : 0
-    if (title.length !== 0) {
-      console.log(incomeAmount, expenseAmount)
+
+    if (title.length !== 0 && amount.length !== 0) {
       this.setState(prev => ({
         moneyHistoryList: [...prev.moneyHistoryList, newTransaction],
         title: '',
         amount: '',
-        type: transactionTypeOptions[0].optionId,
-        income: [...prev.income, +incomeAmount],
-        expense: [...prev.expense, +expenseAmount],
+        type: transactionTypeOptions[0].displayText,
+        income:
+          type === 'Income' ? prev.income + parseInt(amount) : prev.income,
+        expense:
+          type === 'Expenses' ? prev.expense + parseInt(amount) : prev.expense,
       }))
     }
   }
@@ -73,34 +63,26 @@ class MoneyManager extends Component {
     this.setState({amount: event.target.value})
   }
 
-  deleteTransaction = id => {
-    const {moneyHistoryList} = this.state
+  onChangeType = event => {
+    this.setState({type: event.target.value})
+  }
+
+  deleteTransaction = (id, transferType, amount) => {
+    const {moneyHistoryList, income, expense} = this.state
     const updateTransactions = moneyHistoryList.filter(each => each.id !== id)
+    const totalIncome =
+      transferType === 'Income' ? income - parseInt(amount) : income
+    const totalExpenses =
+      transferType === 'Expenses' ? expense - parseInt(amount) : expense
     this.setState({
+      income: totalIncome,
+      expense: totalExpenses,
       moneyHistoryList: updateTransactions,
-      income: updateTransactions.map(each => {
-        if (each.type === 'Income') {
-          return each.amount
-        }
-        return 0
-      }),
-      expense: updateTransactions.map(each => {
-        if (each.type === 'Expenses') {
-          return each.amount
-        }
-        return 0
-      }),
     })
   }
 
   render() {
-    const {moneyHistoryList, title, amount, income, expense} = this.state
-    const totalIncome = income ? income.reduce((acc, curr) => acc + curr) : 0
-    const totalExpenses = expense
-      ? expense.reduce((acc, curr) => acc + curr)
-      : 0
-    console.log(totalIncome)
-    console.log(totalExpenses)
+    const {moneyHistoryList, title, amount, type, income, expense} = this.state
 
     return (
       <div className="bg-container">
@@ -112,7 +94,7 @@ class MoneyManager extends Component {
           </p>
         </div>
         <div className="money-details-container">
-          <MoneyDetails income={totalIncome} expense={totalExpenses} />
+          <MoneyDetails income={income} expense={expense} />
         </div>
         <div className="money-manager-form-and-history-container">
           <form
@@ -135,7 +117,7 @@ class MoneyManager extends Component {
               AMOUNT
             </label>
             <input
-              type="number"
+              type="text"
               id="amount"
               className="money-manager-form-title-input"
               placeholder="AMOUNT"
@@ -152,12 +134,20 @@ class MoneyManager extends Component {
               id="transfer-type"
               className="money-manager-form-title-input"
               onChange={this.onChangeType}
+              value={type}
             >
-              {transactionTypeOptions.map(each => (
-                <option value={each.displayText} key={each.optionId}>
-                  {each.optionId}
-                </option>
-              ))}
+              <option
+                value={transactionTypeOptions[0].displayText}
+                key={transactionTypeOptions[0].displayText}
+              >
+                {transactionTypeOptions[0].optionId}
+              </option>
+              <option
+                value={transactionTypeOptions[1].displayText}
+                key={transactionTypeOptions[1].displayText}
+              >
+                {transactionTypeOptions[1].optionId}
+              </option>
             </select>
             <button type="submit" className="money-manager-form-btn">
               Add
@@ -166,9 +156,9 @@ class MoneyManager extends Component {
           <div className="money-manager-history-container">
             <h1 className="money-manager-form-heading">History</h1>
             <div className="money-manager-heading-container">
-              <h1 className="money-manager-heading1">Title</h1>
-              <h1 className="money-manager-heading1">Amount</h1>
-              <h1 className="money-manager-heading1">Type</h1>
+              <p className="money-manager-heading1">Title</p>
+              <p className="money-manager-heading1">Amount</p>
+              <p className="money-manager-heading1">Type</p>
             </div>
             <ul className="money-manager-history-container-sub">
               {moneyHistoryList &&
